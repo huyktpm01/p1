@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
 import { db } from './firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
@@ -7,17 +7,18 @@ const UpdateUser = ({ userId, refreshUsers, onClose }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [age, setAge] = useState('');
-  const [phone, setPhone] = useState(''); // Thêm state cho số điện thoại
+  const [phone, setPhone] = useState('');
 
   useEffect(() => {
     const fetchUser = async () => {
       const userDoc = doc(db, 'users', userId);
       const userData = await getDoc(userDoc);
       if (userData.exists()) {
-        setName(userData.data().name);
-        setEmail(userData.data().email);
-        setAge(userData.data().age);
-        setPhone(userData.data().phone); // Lấy số điện thoại từ Firestore
+        const { name, email, age, phone } = userData.data();
+        setName(name);
+        setEmail(email);
+        setAge(age);
+        setPhone(phone);
       } else {
         Alert.alert('Lỗi', 'Người dùng không tồn tại.');
       }
@@ -63,7 +64,7 @@ const UpdateUser = ({ userId, refreshUsers, onClose }) => {
       await updateDoc(userDoc, { name, email, age, phone });
       Alert.alert('Thành công', 'Người dùng đã được cập nhật.');
       refreshUsers();
-      onClose(); // Đóng modal sau khi cập nhật thành công
+      onClose();
     } catch (error) {
       console.error("Error updating user: ", error);
       Alert.alert('Lỗi', 'Có lỗi xảy ra khi cập nhật người dùng.');
@@ -83,6 +84,7 @@ const UpdateUser = ({ userId, refreshUsers, onClose }) => {
         value={email}
         onChangeText={setEmail}
         style={styles.input}
+        keyboardType="email-address"
       />
       <TextInput
         placeholder="Tuổi"
@@ -98,7 +100,10 @@ const UpdateUser = ({ userId, refreshUsers, onClose }) => {
         style={styles.input}
         keyboardType="phone-pad"
       />
-      <Button title="Cập nhật người dùng" onPress={handleUpdateUser} color="#ff7f50" />
+      
+      <TouchableOpacity style={styles.updateButton} onPress={handleUpdateUser}>
+        <Text style={styles.updateButtonText}>Cập nhật người dùng</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -109,12 +114,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   input: {
-    borderColor: '#ff7f50',
+    borderColor: '#00796b', // Updated border color to match the color scheme
     borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 10,
+    paddingHorizontal: 15,
     marginVertical: 10,
+    fontSize: 16,
     backgroundColor: '#fff',
+  },
+  updateButton: {
+    backgroundColor: '#00796b', // Changed button color to match the existing color scheme
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+    paddingVertical: 15,
+  },
+  updateButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

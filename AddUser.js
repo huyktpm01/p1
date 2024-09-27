@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Alert, StyleSheet, Text } from 'react-native';
 import { db } from './firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 
@@ -53,33 +53,37 @@ const AddUser = ({ refreshUsers }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.label}>Tên</Text>
       <TextInput
-        placeholder="Tên"
+        placeholder="Nhập tên"
         value={name}
         onChangeText={setName}
         style={styles.input}
       />
+      <Text style={styles.label}>Email</Text>
       <TextInput
-        placeholder="Email"
+        placeholder="Nhập email"
         value={email}
         onChangeText={setEmail}
         style={styles.input}
       />
+      <Text style={styles.label}>Tuổi</Text>
       <TextInput
-        placeholder="Tuổi"
+        placeholder="Nhập tuổi"
         value={age}
         onChangeText={setAge}
         style={styles.input}
         keyboardType="numeric"
       />
+      <Text style={styles.label}>Số điện thoại</Text>
       <TextInput
-        placeholder="Số điện thoại"
+        placeholder="Nhập số điện thoại"
         value={phone}
         onChangeText={setPhone}
         style={styles.input}
         keyboardType="phone-pad"
       />
-      <Button title="Thêm người dùng" onPress={handleAddUser} color="#ff7f50" />
+      <Button title="Thêm người dùng" onPress={handleAddUser} color="#00796b" />
     </View>
   );
 };
@@ -89,12 +93,18 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: '#00796b', // Label color to match your theme
+  },
   input: {
-    borderColor: '#ff7f50',
+    borderColor: '#00796b',
     borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 10,
+    paddingHorizontal: 15,
     marginVertical: 10,
+    fontSize: 16,
     backgroundColor: '#fff',
   },
 });
